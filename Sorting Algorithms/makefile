@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-c
-#CFLAGS=-c -g
+#CFLAGS=-c
+CFLAGS=-c -g
 EXECUTABLE_NAME=eje
 
 all: $(EXECUTABLE_NAME)

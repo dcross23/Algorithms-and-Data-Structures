@@ -21,7 +21,13 @@ int main(int argc, char **argv){
 
 	//bubbleSort(array,arraySize);
 	//selectionSort(array,arraySize);
-	insertionSort(array,arraySize);
+	//insertionSort(array,arraySize);
+
+	//int inc[5] = {1,2,3,4,5};
+	//shellSort(array,arraySize,inc,5);
+
+	quickSort(array,0,arraySize-1);
+
 
 	printf("\n\nSortered array\n");
 	printArray(array,arraySize);
