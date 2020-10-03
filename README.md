@@ -1,1 +1,2 @@
-#Algorithms and Data Estructures (EDA)
+# Algorithms and Data Structures (EDA)
+Collection of algorithms (search, sorting, backtracking, divide and conquer,... algorithms) and data structures such as stacks, queues, trees, heaps,...
