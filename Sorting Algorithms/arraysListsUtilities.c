@@ -1,4 +1,4 @@
-#include "arraysUtility.h"
+#include "arraysListsUtilities.h"
 
 int *createArray(int size){
 	if(size <=0) 
@@ -57,4 +57,60 @@ void swap(int *array, int i, int j){
 	array[i] = array[j];
 	array[j] = temp;
 }
+
+/*=====================================================================================================================================================================================*/
+
+Node* createNode(int info){
+	Node *new=NULL;
+
+	if( (new=malloc(sizeof(Node))) == NULL){
+		return NULL;
+	}
+	new->info = info;
+	new->next = NULL;
+	return new;
+}
+
+
+void createList(Node **list, int numNodes){
+	if(*list==NULL){
+		int i;
+		Node *new=NULL, *last=NULL;	
+		
+		srand(time(NULL));
+		for(i=0; i<numNodes; i++){
+			new = createNode( rand()%numNodes );	
+			if(*list==NULL){
+				*list=new;
+				last=new;			
+			}else{
+				last->next = new;
+				last=new;			
+			}
+			new=NULL;
+		}	
+	}
+}
+
+void printList(Node *list){
+	Node *aux=list;
+	while(aux!=NULL){
+		printf("%d ", aux->info);
+		aux = aux->next;	
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

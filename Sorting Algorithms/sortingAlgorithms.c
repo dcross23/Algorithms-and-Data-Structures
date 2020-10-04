@@ -1,5 +1,4 @@
 #include "sortingAlgorithms.h"
-#include "arraysUtility.h"
 
 /* Sorts the array bubbling each element to his correct
  *  position.      O(n²)
@@ -42,7 +41,7 @@ void selectionSort(int *array, int arraySize){
 /* Inserts the first element of the array in his correct
  *  position (elements are cycling to the first position 
  *  until they are all in their correct position)
- *   O(n²) worst/middle case
+ *   O(n²) worst/average cases
  *   O(n)  best case
  */
 void insertionSort(int *array, int arraySize){
@@ -66,6 +65,7 @@ void insertionSort(int *array, int arraySize){
  * Divides the array in subarrays using gaps (array with 
  *  the length of the subarrays) and the sorting that 
  *  subarrays using insertion sort.
+ * The complexity of this alg depends on the gaps.
  */
 void shellSort(int *array, int arraySize, int *gaps, int numGaps){
 	int gap, i, j; 
@@ -93,6 +93,8 @@ void shellSort(int *array, int arraySize, int *gaps, int numGaps){
  *  elements that are smaller than the pivot in the left of 
  *  the pivot and all the elements that are bigger in the right,
  *  and then sort this 2 subarrays using recursivity.
+ *    O(n²)      worst case
+ *    O(nlg(n))  best/average cases
  */
 void quickSort(int *array, int base, int top){
 	if(base < top){
@@ -120,11 +122,137 @@ int selectPivot(int *array, int base, int top){
 
 
 
+/* Recursive algorithm that separates an array into 2 subarrays 
+ *  that will be merged later in ascending order.
+ *    O(nlg(n)) all cases
+ */
+void mergeSort(int *array, int base, int top){
+	if(base < top){
+		int middle = (base+top)/2;
+		mergeSort(array, base, middle);
+		mergeSort(array, middle+1, top);
+		merge(array, base, middle, middle+1, top);
+	}
+}
+
+//Merges the subarrays in ascending order
+void merge(int *array, int baseA, int topA, int baseB, int topB){
+	int i;	
+	int dimA = topA - baseA +1;
+	int dimB = topB - baseB +1;
+
+	//Temp arrays
+	int A[dimA], B[dimB];
+	for(i=0; i<dimA; i++){
+		A[i] = array[baseA + i];
+	}
+	for(i=0; i<dimB; i++){
+		B[i] = array[baseB + i];
+	}
+		
+	//Indexes for each temp array and main array
+	int indA=0;
+	int indB=0;
+	int ind = baseA;
+	
+	//If there are still elements in A and B, compare the next one 
+	// that has not been added to the main array and the smaller 
+	// one is added to array.
+	//Repeat this until array A or B is finished.
+	while(indA<dimA && indB<dimB){
+		if(A[indA] <= B[indB]){
+			array[ind] = A[indA++];
+		
+		}else{
+			array[ind] = B[indB++];
+		}
+		ind++;
+	}	
+	
+	//If there are still elements on A (because B finished) add them
+	while (indA < dimA){
+		array[ind++] = A[indA++];
+	}
+
+	//If there are still elements on B (because A finished) add them
+	while (indB < dimB){
+		array[ind++] = B[indB++];
+	}
+}
 
 
 
+/* Algorithm based on sorting using distribution of groups. Each number is sorted
+ *  acording to its digits starting form the less significant digit (LSD)
+ *  First the numbers are distributed and sorted according to the most right or less 
+ *  significant digit. Then, this is repeated for each digit until there are no more
+ *  digits. This is when the list will be sorted.
+ *     O(n) all cases
+ */
+void radixSortLSD(Node **list,int numGroups,int numFigures){
+	Node *groups[numGroups], *lasts[numGroups];
+	int k, posFigure;
 
+	for(posFigure=1; posFigure<=numFigures; posFigure++){
+		for(k=0; k<numGroups; k++){
+			groups[k] = lasts[k] = NULL;
+		}
+		distribute(posFigure, list, groups, lasts);
+		concat(list, groups, lasts, numGroups);
+	}
+}
 
+//Distributes the list into groups according to the next extracted figure
+// Ej: if figure extracted is the 2nd one and its number 3, that node will
+//     be added to the group 3
+void distribute(int posFigure, Node **list, Node** groups, Node **lasts){
+	Node *aux = *list;
+	int c;
+
+	while(aux != NULL){
+		c = extractFigure(aux->info, posFigure);
+		if(groups[c] == NULL){
+			groups[c] = aux;
+			lasts[c] = aux;	
+		}else{
+			lasts[c]->next = aux;
+			lasts[c] = aux;		
+		}
+		aux = aux->next;
+		lasts[c]->next = NULL;
+	}
+	*list = NULL;
+}
+
+//Concatenates all groups (0-9) in ascending order. This causes the numbers
+// to be ordered according with and specific figure. 
+void concat(Node **list, Node **groups, Node **lasts, int numGroups){
+	int k,prev;
+	
+	*list = NULL;
+	for(k=0; k<numGroups; k++){
+		if(groups[k] != NULL){
+			if(*list==NULL){
+				*list = groups[k];			
+			}else{
+				lasts[prev]->next = groups[k];		
+			}		
+			prev = k;
+		}
+	}
+	lasts[prev]->next = NULL;
+}
+
+// Extracts figure in a specific position from a number
+int extractFigure (int num, int posFigure){
+	int d, c, figure;
+	
+	d = pow(10, posFigure-1);
+	c = num / d;
+	figure = c % 10;
+
+	return figure;
+}
 
 
 
