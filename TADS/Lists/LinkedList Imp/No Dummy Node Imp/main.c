@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "arrayList.h"
+#include "LLNDList.h"
 
 
 int main(int argc, char **argv){
-	ArrayList *list;
+	LLNDList *list;
 	
-	if(NULL == (list = malloc(sizeof(ArrayList)))) return -1;
+	if(NULL == (list = malloc(sizeof(LLNDList)))) return -1;
 	
 
 	createEmptyList(list);
@@ -27,9 +27,11 @@ int main(int argc, char **argv){
 	printList(list);
 	
 	listElement element = 7;
-	printf("\n\nElement %d finded at position %d\n",element, find(element,list));
+	int position;
+	find(element, list, &position);
+	printf("\n\nElement %d finded at position %d\n",element, position);
 	
-	listPosition posToGet = prev(end(list), list);
+	listPosition posToGet = end(list);
 	printf("\nElement %d goted\n",get(posToGet, list));
 	
 	

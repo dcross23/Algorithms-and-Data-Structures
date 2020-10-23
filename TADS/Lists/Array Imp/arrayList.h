@@ -13,7 +13,7 @@ typedef struct arrayList {
 	int last;
 } ArrayList;
 
-//Stack methods
+//Array list methods
 int createEmptyList(ArrayList *list);
 int isEmpty(ArrayList *list);
 
