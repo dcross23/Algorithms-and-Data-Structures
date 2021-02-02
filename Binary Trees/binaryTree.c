@@ -198,9 +198,148 @@ int numOneChildNodes(BinaryTree treeRoot){
 }
 
 
+/**
+ * Returns the node (root of a subtree) with the highest info value
+ */
+BinaryTree searchMax(BinaryTree treeRoot){
+	if(treeRoot == NULL)
+		return NULL;
+	else{
+		BinaryTree searchMaxInLeft  = searchMax(treeRoot->left);
+		BinaryTree searchMaxInRight = searchMax(treeRoot->right);
+
+		BinaryTree highestValueNode = treeRoot;
+		if(searchMaxInLeft != NULL && searchMaxInLeft->info > highestValueNode->info)
+			highestValueNode = searchMaxInLeft;
+			
+		if(searchMaxInRight != NULL && searchMaxInRight->info > highestValueNode->info)
+			highestValueNode = searchMaxInRight;
+		
+		return highestValueNode;
+	}
+}
+
+
+/**
+ * Returns the node (root of a subtree) with the lowest info value
+ */
+BinaryTree searchMin(BinaryTree treeRoot){
+	if(treeRoot == NULL)
+		return NULL;
+	else{
+		BinaryTree searchMinInLeft  = searchMin(treeRoot->left);
+		BinaryTree searchMinInRight = searchMin(treeRoot->right);
+
+		BinaryTree lowestValueNode = treeRoot;
+		if(searchMinInLeft != NULL && searchMinInLeft->info < lowestValueNode->info)
+			lowestValueNode = searchMinInLeft;
+			
+		if(searchMinInRight != NULL && searchMinInRight->info < lowestValueNode->info)
+			lowestValueNode = searchMinInRight;
+		
+		return lowestValueNode;
+	}
+}
+
+
+/**
+ * Returns true(1) if t1 and t2 are similar (have same structure)
+ *  or false(0) if they are not.
+ */
+int similars(BinaryTree t1, BinaryTree t2){
+	if(t1 == NULL && t2 == NULL)
+		return 1;
+
+	else if(t1!=NULL && t2!=NULL)
+		return(similars(t1->left,t2->left) && similars(t1->right,t2->right));	
+	
+	else
+		return 0;	
+}
+
+/**
+ * Returns true(1) if t1 and t2 are equivalent (have same structure and same
+ *   node info) or false(0) if they are not.
+ * Equivalent is the same as similar but each node compared must have the same info.
+ */
+int equivalents(BinaryTree t1, BinaryTree t2){
+	if(t1 == NULL && t2 == NULL)
+		return 1;
+
+	else if(t1!=NULL && t2!=NULL && t1->info==t2->info)
+		return(equivalents(t1->left,t2->left) && equivalents(t1->right,t2->right));	
+	
+	else
+		return 0;	
+}
+
+
+/**
+ * Creates a new binary tree but inverted, this is, left child (subtree) now is 
+ *  right child and so on.
+ */
+BinaryTree specular(BinaryTree treeRoot){
+	if(treeRoot == NULL)
+		return NULL;
+	else{
+		BinaryTree t;
+		t = createBinaryTreeNode(treeRoot->info);
+		t->left = specular(treeRoot->right);
+		t->right = specular(treeRoot->left);
+		return t;
+	}
+}
 
 
 
+/**
+ * A binary tree is "left weighted" when :
+ *  - There are more nodes in the left subtree than in the right subtree
+ *  - Childs are also "left weighted"
+ * (A null binary tree is also "left weighted")
+ *
+ * This function return true(1) if the tree is left weighted or false(0) if is not. 
+ */
+int leftWeightedTree(BinaryTree treeRoot){
+	if(treeRoot == NULL)
+		return 1;
+		
+	else if(leftWeightedTree(treeRoot->left) && leftWeightedTree(treeRoot->right)){
+		int leftNodes = numNodes(treeRoot->left);
+		int rightNodes = numNodes(treeRoot->right);
+		
+		if( leftNodes>rightNodes || (leftNodes==0 && rightNodes==0) )
+			return 1;
+		else
+			return 0;		
+	}else
+		return 0;
+}
+
+
+/**
+ * A binary tree is "right weighted" when :
+ *  - There are more nodes in the right subtree than in the left subtree
+ *  - Childs are also "right weighted"
+ * (A null binary tree is also "right weighted")
+ *
+ * This function return true(1) if the tree is right weighted or false(0) if is not. 
+ */
+int rightWeightedTree(BinaryTree treeRoot){
+	if(treeRoot == NULL)
+		return 1;
+		
+	else if(rightWeightedTree(treeRoot->left) && rightWeightedTree(treeRoot->right)){
+		int leftNodes = numNodes(treeRoot->left);
+		int rightNodes = numNodes(treeRoot->right);
+		
+		if( leftNodes<rightNodes || (leftNodes==0 && rightNodes==0) )
+			return 1;
+		else
+			return 0;		
+	}else
+		return 0;
+}
 
 
 

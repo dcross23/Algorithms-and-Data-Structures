@@ -30,4 +30,14 @@ int numLeafNodes(BinaryTree treeRoot);
 int numInternalNodes(BinaryTree treeRoot);
 int numOneChildNodes(BinaryTree treeRoot);
 
+BinaryTree searchMax(BinaryTree treeRoot);
+BinaryTree searchMin(BinaryTree treeRoot);
+
+int similars(BinaryTree t1, BinaryTree t2);
+int equivalents(BinaryTree t1, BinaryTree t2);
+BinaryTree specular(BinaryTree treeRoot);
+
+int leftWeightedTree(BinaryTree treeRoot);
+int rightWeightedTree(BinaryTree treeRoot);
+
 #endif
