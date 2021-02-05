@@ -6,7 +6,7 @@
 int createEmptyStack(LLStack *stack){
 	if(stack == NULL) return -1;
 	
-	*stack == NULL;
+	*stack = NULL;
 	return 0;
 }
 
