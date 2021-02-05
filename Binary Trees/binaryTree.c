@@ -343,3 +343,36 @@ int rightWeightedTree(BinaryTree treeRoot){
 
 
 
+
+/**
+ * Given a binarytree with numbers and operators, it returns the result of 
+ *  calculating the arithmetic expresion the tree stores.
+ */
+int evaluate(BinaryTree treeRoot){
+	if(treeRoot != NULL){
+		int leftValue = evaluate(treeRoot->left);
+		int rightValue = evaluate(treeRoot->right);
+	
+		switch(treeRoot->info){
+			case '+':
+				return (leftValue + rightValue);
+				
+			case '-':
+				return (leftValue - rightValue);
+
+			case '*':
+				return (leftValue * rightValue);
+
+			case '/':
+				if(rightValue == 0) return INF;
+				else return (leftValue / rightValue);
+			
+			default:
+				return treeRoot->info - '0';
+		}				
+	}
+}
+
+
+
+

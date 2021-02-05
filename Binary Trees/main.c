@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "binaryTree.h"
+#include "BinaryTreeGenerators/bTreeGenerators.h"
+
 
 BinaryTree createExampleTree(void);
 BinaryTree createLeftWeightedTree(void);
@@ -11,9 +13,9 @@ int main(void)
 	BinaryTree tree = createExampleTree();
 
 	/* BinaryTree traversals */
-	puts("=============================================");
-  	puts("             TREE TRAVERSALS                 ");
-  	puts("=============================================");
+	puts("\x1b[36;1m=============================================\x1b[0m");
+  	puts("\x1b[36;1m             TREE TRAVERSALS                 \x1b[0m");
+  	puts("\x1b[36;1m=============================================\x1b[0m");
 	
 	printf("%23s","PRE-ORDER traversal: ");
 	preOrder(tree);
@@ -33,26 +35,26 @@ int main(void)
 	
 	
 	/* Other functions */
-	puts("=============================================");
-  	puts("             OTHER FUNCTIONS                 ");
-  	puts("=============================================");
-	printf("-BinaryTree height = %d\n", height(tree));
-  	printf("-Number of nodes in the tree = %d\n", numNodes(tree));
+	puts("\x1b[36;1m=============================================\x1b[0m");
+  	puts("\x1b[36;1m             OTHER FUNCTIONS                 \x1b[0m");
+  	puts("\x1b[36;1m=============================================\x1b[0m");
+	printf("-BinaryTree height = \x1b[32;1m %d \x1b[0m\n", height(tree));
+  	printf("-Number of nodes in the tree = \x1b[32;1m %d \x1b[0m\n", numNodes(tree));
   	
   	printf("\n-Replace 'D' to 'X'");
-  	printf("\n   Number of substitutions: %d", replace(tree,'D','X'));
+  	printf("\n   Number of substitutions: \x1b[32;1m %d \x1b[0m", replace(tree,'D','X'));
   	printf("\n   In-Order traversal after replacing: "); inOrder(tree);
   	
-  	printf("\n\n-%-46s: %d\n", "Number of leaf nodes in the tree", numLeafNodes(tree));
-  	printf("-%-46s: %d\n", "Number of internal nodes in the tree", numInternalNodes(tree));
-  	printf("-%-46s: %d\n","Number of nodes with just 1 child in the tree", numOneChildNodes(tree));
+  	printf("\n\n-%-46s:\x1b[32;1m %d \x1b[0m\n", "Number of leaf nodes in the tree", numLeafNodes(tree));
+  	printf("-%-46s:\x1b[32;1m %d \x1b[0m\n", "Number of internal nodes in the tree", numInternalNodes(tree));
+  	printf("-%-46s:\x1b[32;1m %d \x1b[0m\n","Number of nodes with just 1 child in the tree", numOneChildNodes(tree));
   	
 	BinaryTree maxValueTree = searchMax(tree);
-	printf("\n-Highest value in the tree: %c", maxValueTree->info);
+	printf("\n-Highest value in the tree:\x1b[32;1m %c \x1b[0m", maxValueTree->info);
 	printf("\n   In-Order traversal of max value tree: "); inOrder(maxValueTree);
 
 	BinaryTree minValueTree = searchMin(tree);
-	printf("\n-Lowest value in the tree: %c", minValueTree->info);
+	printf("\n-Lowest value in the tree:\x1b[32;1m %c \x1b[0m", minValueTree->info);
 	printf("\n   In-Order traversal of min value tree: "); inOrder(minValueTree);
   	
   	/* To see if 2 trees are similar and/or equivalent, is going to create 2 equal trees and substitute
@@ -117,7 +119,75 @@ int main(void)
   	freeBinaryTree(&rwt);
   	//No need to remove minValueTree and maxValueTree because they are subtrees
   	// of tree, so removing tree will remove all 3.
-  	printf(" Trees removed\n");
+  	printf(" Trees removed\n\n\n");
+  	
+  	
+  	
+  	/* BinaryTree generators */
+	puts("\x1b[36;1m=============================================\x1b[0m");
+  	puts("\x1b[36;1m             TREE GENERATORS                 \x1b[0m");
+  	puts("\x1b[36;1m=============================================\x1b[0m");
+  	
+  	char postOrderExpression[10] = "12+345+**\0";
+  	char preOrderExpression[10] = "*+12*3+45\0";
+  	char inOrderExpression[10] = "1+2*3*4+5\0";
+  	int valid = 1;
+  	
+  	BinaryTree postTree = treeFromPostOrder(postOrderExpression);
+  	printf("-Post-Order expression used:\x1b[32;1m %s \x1b[0m", postOrderExpression);
+  	printf("\n  %25s","Post-Order traversal : "); postOrder(postTree);
+  	printf("\n  %25s","Pre-Order traversal : "); preOrder(postTree);
+  	printf("\n  %25s","In-Order traversal : "); inOrder(postTree);
+  	
+  	
+  	BinaryTree preTree = treeFromPreOrder(preOrderExpression);
+  	printf("\n\n-Pre-Order expression used:\x1b[32;1m %s \x1b[0m", preOrderExpression);
+  	printf("\n  %25s","Post-Order traversal : "); postOrder(preTree);
+  	printf("\n  %25s","Pre-Order traversal : "); preOrder(preTree);
+  	printf("\n  %25s","In-Order traversal : "); inOrder(preTree);
+  	
+  	
+  	BinaryTree inTree = treeFromInOrder(inOrderExpression);
+  	printf("\n\n-In-Order expression used:\x1b[32;1m %s \x1b[0m", inOrderExpression);
+  	printf("\n  %25s","Post-Order traversal : "); postOrder(inTree);
+  	printf("\n  %25s","Pre-Order traversal : "); preOrder(inTree);
+  	printf("\n  %25s","In-Order traversal : "); inOrder(inTree);
+  	
+  	
+  	BinaryTree preInTree = treeFromPreOrderAndInOrder(preOrderExpression,inOrderExpression, &valid);
+  	printf("\n\n-Tree from pre and in order expressions:");
+  	printf("\n  -> Pre-Order expression used:\x1b[32;1m %s \x1b[0m", preOrderExpression);
+  	printf("\n  -> In-Order  expression used:\x1b[32;1m %s \x1b[0m", inOrderExpression);
+  	if(valid){
+  		printf("\n  %25s","Post-Order traversal : "); postOrder(preInTree);
+  		printf("\n  %25s","Pre-Order traversal : "); preOrder(preInTree);
+  		printf("\n  %25s","In-Order traversal : "); inOrder(preInTree);
+  	}else{
+  		printf("\n  %25s","Can not create tree"); 
+  	}	
+
+  	
+  	BinaryTree postInTree = treeFromPostOrderAndInOrder(postOrderExpression,inOrderExpression, &valid);
+  	printf("\n\n-Tree from post and in order expressions:");
+  	printf("\n  -> Post-Order expression used:\x1b[32;1m %s \x1b[0m", postOrderExpression);
+  	printf("\n  -> In-Order   expression used:\x1b[32;1m %s \x1b[0m", inOrderExpression);
+  	if(valid){
+  		printf("\n  %25s","Post-Order traversal : "); postOrder(postInTree);
+  		printf("\n  %25s","Pre-Order traversal : "); preOrder(postInTree);
+  		printf("\n  %25s","In-Order traversal : "); inOrder(postInTree);
+  	}else{
+  		printf("\n  %25s","Can not create tree"); 
+  	}
+  	
+  	
+  	freeBinaryTree(&postTree);
+  	freeBinaryTree(&preTree);
+  	freeBinaryTree(&inTree);
+  	freeBinaryTree(&preInTree);
+  	freeBinaryTree(&postInTree);
+  	
+  	
+  	puts("");
 	return 0;	
 }
 

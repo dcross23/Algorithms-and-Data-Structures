@@ -1,11 +1,17 @@
 CC=gcc
 #CFLAGS=-c
 CFLAGS=-c -g
-EXECUTABLE_NAME=tree
+EXECUTABLE_NAME=binaryTree
 
-all: $(EXECUTABLE_NAME)
+GENERATORS = BinaryTreeGenerators
+OBJ = main.o binaryTree.o treeModifQueue.o $(GENERATORS)/bTreeGenerators.o $(GENERATORS)/treeModifStack.o
 
-$(EXECUTABLE_NAME): main.o binaryTree.o treeModifQueue.o
+all: generators $(EXECUTABLE_NAME)
+
+generators:
+	cd BinaryTreeGenerators; make
+
+$(EXECUTABLE_NAME): $(OBJ)
 	$(CC) $^ -o $@ -lm
 
 main.o: main.c
@@ -20,4 +26,5 @@ treeModifQueue.o: treeModifQueue.c treeModifQueue.h binaryTree.h
 
 clean: 
 	rm *.o
+	cd BinaryTreeGenerators; make clean
 	rm $(EXECUTABLE_NAME)

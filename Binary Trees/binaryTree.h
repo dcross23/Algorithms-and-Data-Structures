@@ -1,6 +1,8 @@
 #ifndef __BINARY_TREE_H__
 #define __BINARY_TREE_H__
 
+#define INF 99999
+
 typedef char BinaryTreeElement;
 
 typedef struct BinaryTreeNode{
@@ -20,7 +22,7 @@ void inOrder(BinaryTree tree);
 void postOrder(BinaryTree tree);
 void levelOrder(BinaryTree tree);
 
-//Other BinaryTree functions
+//Somesss BinaryTree functions
 int height(BinaryTree treeRoot);
 int numNodes(BinaryTree treeRoot);
 
@@ -39,5 +41,9 @@ BinaryTree specular(BinaryTree treeRoot);
 
 int leftWeightedTree(BinaryTree treeRoot);
 int rightWeightedTree(BinaryTree treeRoot);
+
+//Evaluate function for simple arithmetic expresions
+int evaluate(BinaryTree treeRoot);
+
 
 #endif
