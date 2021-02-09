@@ -9,7 +9,7 @@ OBJ = main.o binaryTree.o treeModifQueue.o $(GENERATORS)/bTreeGenerators.o $(GEN
 all: generators $(EXECUTABLE_NAME)
 
 generators:
-	cd BinaryTreeGenerators; make
+	cd $(GENERATORS); make
 
 $(EXECUTABLE_NAME): $(OBJ)
 	$(CC) $^ -o $@ -lm
@@ -26,5 +26,5 @@ treeModifQueue.o: treeModifQueue.c treeModifQueue.h binaryTree.h
 
 clean: 
 	rm *.o
-	cd BinaryTreeGenerators; make clean
+	cd $(GENERATORS); make clean
 	rm $(EXECUTABLE_NAME)

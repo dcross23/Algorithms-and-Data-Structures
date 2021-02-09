@@ -1,11 +1,17 @@
 CC=gcc
 #CFLAGS=-c
 CFLAGS=-c -g
-EXECUTABLE_NAME=eje
+EXECUTABLE_NAME=sortAlg
 
-all: $(EXECUTABLE_NAME)
+OF = OtherFiles
+OBJ = main.o sortingAlgorithms.o $(OF)/arraysListsUtilities.o $(OF)/heap.o
 
-$(EXECUTABLE_NAME): main.o sortingAlgorithms.o arraysListsUtilities.o
+all: otherFiles $(EXECUTABLE_NAME)
+
+otherFiles:
+	cd $(OF); make
+
+$(EXECUTABLE_NAME): $(OBJ)
 	$(CC) $^ -o $@ -lm
 
 main.o: main.c
@@ -17,10 +23,8 @@ sortingAlgorithms.o: sortingAlgorithms.c sortingAlgorithms.h
 arraysListsUtilities.o: arraysListsUtilities.c arraysListsUtilities.h
 	$(CC) $(CFLAGS) arraysListsUtilities.c
 
-#%.o: %.c %.h
-#	$(CC) -c %.c
-
 
 clean: 
+	cd $(OF); make clean
 	rm *.o
 	rm $(EXECUTABLE_NAME)

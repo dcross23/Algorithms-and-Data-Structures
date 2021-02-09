@@ -1,6 +1,8 @@
 #include "sortingAlgorithms.h"
+#include <math.h>
 
-/* Sorts the array bubbling each element to his correct
+/**
+ * Sorts the array bubbling each element to his correct
  *  position.      O(n²)
  */
 void bubbleSort(int *array, int arraySize){
@@ -17,7 +19,8 @@ void bubbleSort(int *array, int arraySize){
 }
 
 
-/* Select the lowest element and put it in his correct
+/**
+ * Select the lowest element and put it in his correct
  *  position.        O(n²)
  */
 void selectionSort(int *array, int arraySize){
@@ -38,7 +41,8 @@ void selectionSort(int *array, int arraySize){
 	}
 }
 
-/* Inserts the first element of the array in his correct
+/**
+ * Inserts the first element of the array in his correct
  *  position (elements are cycling to the first position 
  *  until they are all in their correct position)
  *   O(n²) worst/average cases
@@ -61,7 +65,8 @@ void insertionSort(int *array, int arraySize){
 
 
 
-/* Inprovement of "insertionSort". 
+/**
+ * Inprovement of "insertionSort". 
  * Divides the array in subarrays using gaps (array with 
  *  the length of the subarrays) and the sorting that 
  *  subarrays using insertion sort.
@@ -89,7 +94,8 @@ void shellSort(int *array, int arraySize, int *gaps, int numGaps){
 
 
 
-/* Recursive algorithm that uses a pivot and putting all the
+/**
+ * Recursive algorithm that uses a pivot and putting all the
  *  elements that are smaller than the pivot in the left of 
  *  the pivot and all the elements that are bigger in the right,
  *  and then sort this 2 subarrays using recursivity.
@@ -122,7 +128,8 @@ int selectPivot(int *array, int base, int top){
 
 
 
-/* Recursive algorithm that separates an array into 2 subarrays 
+/**
+ * Recursive algorithm that separates an array into 2 subarrays 
  *  that will be merged later in ascending order.
  *    O(nlg(n)) all cases
  */
@@ -182,7 +189,8 @@ void merge(int *array, int baseA, int topA, int baseB, int topB){
 
 
 
-/* Algorithm based on sorting using distribution of groups. Each number is sorted
+/**
+ * Algorithm based on sorting using distribution of groups. Each number is sorted
  *  acording to its digits starting form the less significant digit (LSD)
  *  First the numbers are distributed and sorted according to the most right or less 
  *  significant digit. Then, this is repeated for each digit until there are no more
@@ -254,6 +262,36 @@ int extractFigure (int num, int posFigure){
 	return figure;
 }
 
+
+
+
+/**
+ * Algorith based on Heap (priority queues) properties. In a heap, the 
+ *  top element has the highest/lowest priority (or key), so using this property, 
+ *  we can create a Heap using the elements of the array as the keys in the heap, 
+ *  and then extracting always the top element and inserting them in order in the
+ *  array.
+ *         O(nlog(n))
+ */
+void heapSort(int *array, int arraySize){
+	if(array != NULL && arraySize >0){
+		int hSize = arraySize, i;
+		Heap h;
+		heapElement top;
+		
+		h.size = hSize;
+		
+		for(i=1; i<=hSize; i++){
+			h.elements[i].key = array[i-1];
+		}
+		heapify(&h);
+		
+		for(i=1; i<=hSize; i++){
+			removeTop(&h, &top);
+			array[i-1] = top.key;
+		}		
+	}
+}
 
 
 

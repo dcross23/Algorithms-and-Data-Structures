@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "arraysListsUtilities.h"
+#include "OtherFiles/arraysListsUtilities.h"
 #include "sortingAlgorithms.h"
 
 int main(int argc, char **argv){
@@ -28,6 +28,11 @@ int main(int argc, char **argv){
 
 	//quickSort(array,0,arraySize-1);
 	//mergeSort(array,0,arraySize-1);
+	
+	//To change sorting order (ascending or descending) just change 
+	// KEYS_ORDER define in OtherFiles/heap.h. This will change how 
+	// keys are ordered in the Heap.
+	heapSort(array, arraySize);
 
 	printf("\n\nSortered array\n");
 	printArray(array,arraySize);

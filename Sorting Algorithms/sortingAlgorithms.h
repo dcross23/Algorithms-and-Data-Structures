@@ -1,8 +1,8 @@
 #ifndef __SORTING_ALGORITHMS__
 #define __SORTING_ALGORITHMS__
 
-#include <math.h>
-#include "arraysListsUtilities.h"
+#include "OtherFiles/arraysListsUtilities.h"
+#include "OtherFiles/heap.h"
 
 void bubbleSort(int *array, int arraySize);
 void selectionSort(int *array, int arraySize);
@@ -24,5 +24,7 @@ void distribute(int posFigure, Node **list, Node** groups, Node **lasts);
 void concat(Node **list, Node **groups, Node **lasts, int numGroups);
 int extractFigure (int num, int posFigure);
 
+//HeapSort
+void heapSort(int *array, int arraySize);
 
 #endif

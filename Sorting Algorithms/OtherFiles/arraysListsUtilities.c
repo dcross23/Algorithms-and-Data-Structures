@@ -21,9 +21,7 @@ int *createArray(int size){
 }
 
 int *createSortedArray(int size){
-	if(size <=0) 
-		return NULL;
-
+	if(size <=0) return NULL;
 
 	int *array;
 	if(NULL == (array=malloc(size * sizeof(int)))){
