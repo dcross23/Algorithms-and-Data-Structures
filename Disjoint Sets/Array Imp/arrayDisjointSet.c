@@ -3,8 +3,8 @@
 /**
  * Creates and initializes a Partition. In array implementation, 
  *  at the start, each element is part of his own partition. This is,
- *  if there are n elements, at the start there will be n partitions, 
- *  where each element is located alone in a partition.     O(n)
+ *  if there are n elements, at the start there will be n sets, 
+ *  where each element is located alone in his set.     O(n)
  */
 void create(ADsPartition p){
 	int i;
