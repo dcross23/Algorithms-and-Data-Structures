@@ -12,6 +12,8 @@
  *  partition of 3 elements, it will be represented as:
  *  Elements in the array -> 3  2  3  
  *  Indexes of elements   -> 1  2  3
+ *
+ * Union-search secuence complexity -> O(n²)
  */
 
 //Disjoint set definitions for partition, sets and elements in sets

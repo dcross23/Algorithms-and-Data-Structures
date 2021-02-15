@@ -12,6 +12,8 @@
  *  partition of 3 elements, it will be represented as:
  *    3 -> 1 -> NULL
  *    2 -> NULL
+ *
+ * Union-search secuence complexity -> O(n²)
  */
  
 //Disjoint set definitions for partition, sets and elements in sets
