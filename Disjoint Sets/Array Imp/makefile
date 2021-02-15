@@ -2,20 +2,20 @@ CC=gcc
 
 #CFLAGS=-c
 CFLAGS=-c -g
-EXECUTABLE_NAME=disjointSets
+EXECUTABLE_NAME=arrayDisjointSets
 
-OBJ = main.o disjointSet.o
+OBJ = main.o arrayDisjointSet.o
 
 all: $(EXECUTABLE_NAME)
 
 $(EXECUTABLE_NAME): $(OBJ)
 	$(CC) $^ -o $@ -lm
 
-main.o: main.c disjointSet.h
+main.o: main.c arrayDisjointSet.h
 	$(CC) $(CFLAGS) main.c
 
-disjointSet.o: disjointSet.c disjointSet.h
-	$(CC) $(CFLAGS) disjointSet.c 
+arrayDisjointSet.o: arrayDisjointSet.c arrayDisjointSet.h
+	$(CC) $(CFLAGS) arrayDisjointSet.c 
 
 clean: 
 	rm *.o

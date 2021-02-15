@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "disjointSet.h"
+#include "arrayDisjointSet.h"
 
-void printPartition(DsPartition p);
+void printPartition(ADsPartition p);
 
 int main(){ 
-	DsPartition p;
+	ADsPartition p;
 	int i;
 
 	create(p);
@@ -41,16 +41,23 @@ int main(){
 }
 
 
-void printPartition(DsPartition p){
+void printPartition(ADsPartition p){
 	int i;
 	printf("\n");
 
-	for (i =0;i<MAX_ELEMENTS;i++) printf("|%2d",p[i]);
-		printf("|   array elements (sets)\n");
+	for (i =0;i<MAX_SETS;i++) 
+		printf("|%2d",p[i]);
+	printf("|   array elements (set representant)\n");
 
-	for (i =0;i<MAX_ELEMENTS;i++) printf("---");
-		printf("-\n");
+	for (i =0;i<MAX_SETS;i++) 
+		printf("---");
+	printf("-\n");
 
-	for (i =0;i<MAX_ELEMENTS;i++) printf(" %2d",i);
-		printf("    array indexes (set elements)\n\n");
+	//Representants of each set are represented in purple
+	for (i =0;i<MAX_SETS;i++)
+		if(i != p[i])
+			printf(" %2d",i);
+		else
+			printf("\x1b[35;1m %2d\x1b[0m",i);
+	printf("    array indexes (set elements)\n\n");
 }

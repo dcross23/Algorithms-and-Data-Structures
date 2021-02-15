@@ -1,7 +1,7 @@
-#ifndef __DISJOINT_SET_H__
-#define __DISJOINT_SET_H__
+#ifndef __ARRAY_DISJOINT_SET_H__
+#define __ARRAY_DISJOINT_SET_H__
 
-#define MAX_ELEMENTS 16
+#define MAX_SETS 16
 
 /**
  * In this type of implementation, a partition is represented by an array.
@@ -15,13 +15,13 @@
  */
 
 //Disjoint set definitions for partition, sets and elements in sets
-typedef int DsPartition[MAX_ELEMENTS];
-typedef int DsSet;
-typedef int DsElement;
+typedef int ADsPartition[MAX_SETS];
+typedef int ADsSet;
+typedef int ADsElement;
 
 //Disjoint set methods
-void create(DsPartition p);
-DsSet search(DsElement x, DsPartition p);
-void join(DsSet x, DsSet y, DsPartition p);
+void create(ADsPartition p);
+ADsSet search(ADsElement x, ADsPartition p);
+void join(ADsSet x, ADsSet y, ADsPartition p);
 
 #endif
