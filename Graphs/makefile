@@ -1,10 +1,10 @@
 CC=gcc
 #CFLAGS=-c
 CFLAGS=-c -g
-EXECUTABLE_NAME=sortAlg
+EXECUTABLE_NAME=graphs
 
 OF = OtherFiles
-OBJ = main.o sortingAlgorithms.o $(OF)/arraysListsUtilities.o $(OF)/heap.o
+OBJ = main.o graph.o $(OF)/linkedListQueue.o
 
 all: otherFiles $(EXECUTABLE_NAME)
 
@@ -17,9 +17,10 @@ $(EXECUTABLE_NAME): $(OBJ)
 main.o: main.c
 	$(CC) $(CFLAGS) main.c
 
-sortingAlgorithms.o: sortingAlgorithms.c sortingAlgorithms.h
-	$(CC) $(CFLAGS) sortingAlgorithms.c
+graph.o: graph.c graph.h
+	$(CC) $(CFLAGS) graph.c
 
+.PHONY: clean
 clean: 
 	cd $(OF); make clean
 	rm *.o
