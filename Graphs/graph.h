@@ -22,7 +22,7 @@ typedef struct edge{
 typedef struct{ 
 	int visited;
 	int entryDegree;
-	int topologicalOrd;
+	int topSort;
 	int distance;
 	int weight;
 	int previous;
@@ -52,6 +52,10 @@ void fullDfs(int firstVertex, Graph *g);
 //Breadth First Search      (in spanish, "Recorrido en amplitud")
 void bfs(int firstVertex, Graph *g);
 void fullBfs(int firstVertex, Graph *g);
+
+//Topological Sort  (only directed acyclic graphs)
+int topologicalSort(Graph *g);
+int improvedTopSort(Graph *g);
 
 
 #endif

@@ -45,15 +45,52 @@ int main(void){
   	initGraph(gT28);
  	printf("\nFULL BFS (\"Amplitud mejorado\"): \x1b[35;1m");
   	fullBfs(5,gT28);
-  	printf("\x1b[0m\n\n");
-
-
+  	printf("\x1b[0m\n");
+  	
+  	printf("\n\x1b[32;1m========================================================================\x1b[0m\n");
+  	
+  	//Topological sort
+  	printf("\nTopological Sort:\x1b[35;1m");
+  	if(-1 == topologicalSort(gT28)){
+  		printf("\n Cyclic graph, imposible to get topological sort\n");
+  	}else{
+  		int i, tSort;
+		for(tSort=1; tSort<=gT28->order; tSort++){
+	  		for(i=1; i<=gT28->order; i++){
+	  			if(gT28->vertices[i].topSort == tSort)
+	  				printf(" %d", i);
+	  		}
+	  	}  	
+  	
+  		printf("\n\x1b[33;3;4mGraph after topologicalSort algorithm:\x1b[0m\n");
+  		printGraph(gT28);
+  	}
+  	
+  	
+  	printf("\n\nImproved topological Sort:\x1b[35;1m");
+  	if(-1 == improvedTopSort(gT28)){
+  		printf("\n Cyclic graph, imposible to get topological sort\n");
+  	}else{
+  		int i, tSort;
+		for(tSort=1; tSort<=gT28->order; tSort++){
+	  		for(i=1; i<=gT28->order; i++){
+	  			if(gT28->vertices[i].topSort == tSort)
+	  				printf(" %d", i);
+	  		}
+	  	}  	
+  	
+  		printf("\n\x1b[33;3;4mGraph after improvedTopSort algorithm:\x1b[0m\n");
+  		printGraph(gT28);
+  	}
+  	
+  	printf("\n\x1b[35;1;4m(Results are different but they are both correct)\x1b[0m\n\n");
+  	
 	return 0;
 }
 
 
 /**
- *Creates an exmple graph
+ *Creates an example graph
  *
  *         1 -> 2
  *	 /  \  / \
