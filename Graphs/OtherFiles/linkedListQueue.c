@@ -10,7 +10,7 @@ int createEmptyQueue(LLQueue *queue){
 	return 0;
 }
 
-int isEmpty(LLQueue *queue){
+int isQueueEmpty(LLQueue *queue){
 	if(queue == NULL) return -1;
 
 	return (queue->front == 0);
@@ -25,7 +25,7 @@ int queueAdd(queueElement newElement, LLQueue *queue){
 	new->element = newElement;
 	new->next = NULL;
 
-	if(isEmpty(queue) == 1){
+	if(isQueueEmpty(queue) == 1){
 		queue->front = queue->rear = new;
 	
 	}else{
@@ -38,7 +38,7 @@ int queueAdd(queueElement newElement, LLQueue *queue){
 int queueRemove(LLQueue *queue, queueElement *element){
 	if(queue == NULL || element == NULL) return -1;
 	
-	if(isEmpty(queue) == 1){
+	if(isQueueEmpty(queue) == 1){
 		return 0;
 
 	}else{
@@ -58,7 +58,7 @@ int queueRemove(LLQueue *queue, queueElement *element){
 void printQueue(LLQueue *queue){
 	if(queue != NULL){
 		printf("\nQUEUE\n");
-		if(isEmpty(queue) == 1){
+		if(isQueueEmpty(queue) == 1){
 			printf("The queue is empty\n");
 		}else{
 			QueueNode *aux = queue->front;

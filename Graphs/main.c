@@ -49,6 +49,7 @@ int main(void){
   	
   	printf("\n\x1b[32;1m========================================================================\x1b[0m\n");
   	
+  	
   	//Topological sort
   	printf("\nTopological Sort:\x1b[35;1m");
   	if(-1 == topologicalSort(gT28)){
@@ -83,7 +84,31 @@ int main(void){
   		printGraph(gT28);
   	}
   	
-  	printf("\n\x1b[35;1;4m(Results are different but they are both correct)\x1b[0m\n\n");
+  	printf("\n\x1b[35;1;4m(Results are different but they are both correct)\x1b[0m\n");
+  	
+  	printf("\n\x1b[32;1m========================================================================\x1b[0m\n");
+  	
+  	
+  	//Shortest path algorithms
+  	//No ponderated graphs
+  	#ifndef WEIGHTED_GRAPHS
+  		int fv = 1; 
+  	
+  		printf(" ");
+  		printf("\n\x1b[33;3;4mGraph after npPathsAlgorithm algorithm:\x1b[0m\n");
+  		npPathsAlgorithm(fv,gT28);
+  		printGraph(gT28);
+  		
+  		printf("\n\n");
+  		//improvedNpPathsAlg(fv, gT28);
+  		//printGraph(gT28);
+  		
+
+		seeAllCostsAndPaths(fv, gT28);  		
+  	#else
+  	
+  	#endif 	
+  	
   	
 	return 0;
 }

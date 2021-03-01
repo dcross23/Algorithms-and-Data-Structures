@@ -18,7 +18,7 @@ typedef struct {
 
 //Stack methods
 int createEmptyQueue(LLQueue *queue);
-int isEmpty(LLQueue *queue);
+int isQueueEmpty(LLQueue *queue);
 
 int queueAdd(queueElement newElement, LLQueue *queue);
 int queueRemove(LLQueue *queue, queueElement *element);

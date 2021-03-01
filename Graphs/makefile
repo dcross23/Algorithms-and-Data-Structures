@@ -4,7 +4,7 @@ CFLAGS=-c -g
 EXECUTABLE_NAME=graphs
 
 OF = OtherFiles
-OBJ = main.o graph.o $(OF)/linkedListQueue.o
+OBJ = main.o graph.o $(OF)/linkedListQueue.o $(OF)/linkedListStack.o
 
 all: otherFiles $(EXECUTABLE_NAME)
 

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "./OtherFiles/linkedListQueue.h"
+#include "./OtherFiles/linkedListStack.h"
 
 #define COLOR_TEXT(text) "\x1b[36;1m"#text"\x1b[0m"
 
@@ -100,7 +101,7 @@ void bfs(int firstVertex, Graph *g){
 	createEmptyQueue(&q);
 	
 	queueAdd(firstVertex, &q);
-	while (!isEmpty(&q)){
+	while (!isQueueEmpty(&q)){
 		queueRemove(&q, &v);
 		
 		if (!g->vertices[v].visited) {
@@ -208,10 +209,10 @@ int improvedTopSort(Graph *g){
 	
 	//If there is any vertex with entry degree 0, there is
 	// a cycle (is a cyclic graph)
-	if(isEmpty(&q)) return -1;
+	if(isQueueEmpty(&q)) return -1;
 	
 	nextVertex = 1;
-	while(!isEmpty(&q)){
+	while(!isQueueEmpty(&q)){
 		queueRemove(&q, &v);
 		g->vertices[v].topSort = nextVertex++;
 		
@@ -225,6 +226,136 @@ int improvedTopSort(Graph *g){
 	}	
 
 	
+}
+
+
+
+
+/**
+ * From an initial vertex (firstVertex), it gets the shortest path to the rest
+ *  of vertices of the no weighted graph. Because the graph is a no weighted, 
+ *  it only matters the number of edges (distance) needed to reach a specific 
+ *  vertex.
+ * 
+ * Loop for each vertex to asign each one a distance from firstVertex --> O(n)
+ * Loop for each vertex searching a path from the firstVertex --> O(n)
+ * 
+ * Inner loop is executed n times for each distance that has to be asigned to 
+ *  each vertex --> algorith complexity is --> O(n²)
+ */
+void npPathsAlgorithm(int firstVertex, Graph *g){
+	int actualDist, v;
+	GraphEdge *e;
+
+	initGraph(g);
+	g->vertices[firstVertex].distance = 0;
+	g->vertices[firstVertex].previous = 0;
+	
+	for(actualDist=0; actualDist<g->order; actualDist++){
+		for(v=1; v<=g->order; v++){
+			if(!g->vertices[v].visited && g->vertices[v].distance == actualDist){
+				g->vertices[v].visited = 1;
+				e = g->vertices[v].edges;
+				while(e != NULL){
+					if(g->vertices[e->vertex].distance == INF){
+						g->vertices[e->vertex].distance = g->vertices[v].distance + 1;
+						g->vertices[e->vertex].previous = v;
+					}
+					e = e->next;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+/**
+ * The algorithm does the same as npPathsAlgorithm algorithm, but now it will use a queue
+ *  to improve time complexity.
+ *
+ * Add to/Remove from queue each vertex --> O(n) in the worst case (all vertices are visited)
+ * Inner loop executes 1 time for each edge --> assuming "a" edges --> O(a)
+ *  (visited edges are not inserted in the queue)
+ *
+ * Now, algorithm time complexity is --> O(n+a)
+ */
+void improvedNpPathsAlg(int firstVertex, Graph *g){
+	int v;
+	GraphEdge *e;
+	LLQueue q;
+	
+	initGraph(g);
+	g->vertices[firstVertex].distance = 0;
+	g->vertices[firstVertex].previous = 0;
+	
+	createEmptyQueue(&q);
+	queueAdd(firstVertex, &q);
+	while(!isQueueEmpty(&q)){
+		queueRemove(&q, &v);
+		g->vertices[v].visited = 1;
+		
+		e = g->vertices[v].edges;
+		while(e != NULL){
+			if(g->vertices[e->vertex].distance == INF){
+				g->vertices[e->vertex].distance = g->vertices[v].distance + 1;
+				g->vertices[e->vertex].previous = v;
+				queueAdd(e->vertex, &q);
+			}
+			e = e->next;
+		}
+	}
+}
+
+
+
+
+/**
+ * Algorithm to interpret the graph table and print the path from firstVertex
+ *  to lastVertex. It returns the distance(cost) between the vertices.
+ */
+int seeCostAndPath(int firstVertex, int lastVertex, Graph *g){
+	int v, p;
+	LLStack s;
+	createEmptyStack(&s);
+	
+	v = lastVertex;
+	p = g->vertices[v].previous;
+	push(lastVertex, &s);
+	while(p != 0){
+		push(p, &s);
+		v = p;
+		p = g->vertices[v].previous;
+	}
+	
+	if(v != firstVertex){
+		return INF;
+	
+	}else{
+		while(!isStackEmpty(&s)){
+			pop(&s, &v);
+			printf("\x1b[35;1m%d \x1b[0m", v);
+		}
+		return g->vertices[lastVertex].distance;
+	}
+}
+
+
+/**
+ * Using seeCostAndPath algorithm, it prints all possible paths from firstVertex
+ *  to the rest, including the distance(cost) between them.
+ */
+void seeAllCostsAndPaths(int firstVertex, Graph *g){
+	int i, dist;
+	for(i=1; i<=g->order; i++){
+		if(i != firstVertex){
+			printf("\t");
+			dist = seeCostAndPath(firstVertex, i, g);
+			if(dist != INF) printf(" ->  Path with cost \x1b[32;1m%d\x1b[0m  ->  from %d to %d \n", dist, firstVertex, i);
+			else		printf("Theres no path from %d to %d \n", firstVertex, i);
+		}
+	}
 }
 
 
@@ -260,8 +391,11 @@ void printGraph(Graph *g){
 		
 		e = g->vertices[i].edges;
 		while (e != NULL){   
-			printf(" ->%2d", e->vertex);	// Not weighted graph
-			//printf(" ->%2d, %2d", p->v, p->peso); // Weighted graph
+			#ifndef WEIGHTED_GRAPHS
+  				printf(" ->%2d", e->vertex);	// Not weighted graph
+			#else
+				printf(" ->%2d, %2d", e->vertex, e->weight); // Weighted graph
+			#endif 
 			e = e->next;
 		}
 		printf("\n");
