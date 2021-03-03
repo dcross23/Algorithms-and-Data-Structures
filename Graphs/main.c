@@ -90,23 +90,34 @@ int main(void){
   	
   	
   	//Shortest path algorithms
-  	//No ponderated graphs
+  	int firstV = 1; 
   	#ifndef WEIGHTED_GRAPHS
-  		int fv = 1; 
-  	
+  	//No weighted graphs
   		printf(" ");
   		printf("\n\x1b[33;3;4mGraph after npPathsAlgorithm algorithm:\x1b[0m\n");
-  		npPathsAlgorithm(fv,gT28);
+  		npPathsAlgorithm(firstV,gT28);
   		printGraph(gT28);
   		
-  		printf("\n\n");
-  		//improvedNpPathsAlg(fv, gT28);
+  		//printf("\n\x1b[33;3;4mGraph after improvedNpPathsAlg algorithm:\x1b[0m\n");
+  		//improvedNpPathsAlg(firstV, gT28);
   		//printGraph(gT28);
   		
-
-		seeAllCostsAndPaths(fv, gT28);  		
+		printf("\n\x1b[33;3;4mAll paths generated\x1b[0m\n");
+		seeAllCostsAndPaths(firstV, gT28);  
+		
   	#else
-  	
+  	//Weighted graphs
+  		printf(" ");
+  		printf("\n\x1b[33;3;4mGraph after Dijkstra algorithm:\x1b[0m\n");
+  		dijkstra(firstV,gT28);
+  		printGraph(gT28);
+  		
+  		//printf("\n\x1b[33;3;4mGraph after improvedDijkstra algorithm:\x1b[0m\n");
+  		//improvedDijkstra(firstV, gT28);
+  		//printGraph(gT28);
+  		
+  		printf("\n\x1b[33;3;4mAll paths generated\x1b[0m\n");
+		seeAllCostsAndPaths(firstV, gT28);  
   	#endif 	
   	
   	
@@ -115,7 +126,7 @@ int main(void){
 
 
 /**
- *Creates an example graph
+ *Creates an example graph (weights are not included in this drawing)
  *
  *         1 -> 2
  *	 /  \  / \
@@ -138,17 +149,29 @@ Graph *createExampleGraph(){
 	// edges vertex 1
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 2;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 2;
+	#endif
 	g->vertices[1].edges=e;
 
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 3;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 4;
+	#endif
 	g->vertices[1].edges->next=e;
 
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 4;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 1;
+	#endif
 	g->vertices[1].edges->next->next=e;
 	e->next=NULL;
 
@@ -156,12 +179,20 @@ Graph *createExampleGraph(){
 	// edges vertex 2
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 4;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 3;
+	#endif
 	g->vertices[2].edges=e;
 
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 5;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 10;
+	#endif
 	g->vertices[2].edges->next=e;
 	e->next=NULL;
 
@@ -169,7 +200,11 @@ Graph *createExampleGraph(){
 	// edges vertex 3
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 6;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 5;
+	#endif
 	g->vertices[3].edges=e;
 	e->next=NULL;
 
@@ -177,17 +212,29 @@ Graph *createExampleGraph(){
 	// edges vertex 4
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 3;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 2;
+	#endif
 	g->vertices[4].edges=e;
 
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 6;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 8;
+	#endif
 	g->vertices[4].edges->next=e;
 
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 7;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 4;
+	#endif
 	g->vertices[4].edges->next->next=e;
 	e->next=NULL;
 
@@ -195,12 +242,20 @@ Graph *createExampleGraph(){
 	// edges vertex 5
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 4;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 2;
+	#endif
 	g->vertices[5].edges=e;
 
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 7;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 6;
+	#endif
 	g->vertices[5].edges->next=e;
 	e->next=NULL;
 
@@ -212,7 +267,11 @@ Graph *createExampleGraph(){
 	// edges vertex 7
 	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
 	e->vertex = 6;
-	e->weight = 1;
+	#ifndef WEIGHTED_GRAPHS
+		e->weight = 1;
+	#else
+		e->weight = 1;
+	#endif
 	g->vertices[7].edges=e;
 	e->next=NULL;
 

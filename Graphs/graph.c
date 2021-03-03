@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "./OtherFiles/linkedListQueue.h"
 #include "./OtherFiles/linkedListStack.h"
+#include "./OtherFiles/heap.h"
 
 #define COLOR_TEXT(text) "\x1b[36;1m"#text"\x1b[0m"
 
@@ -55,7 +56,7 @@ void dfs(int firstVertex, Graph *g){
 	g->vertices[firstVertex].visited = 1;
 	
 	e = g->vertices[firstVertex].edges;
-	while (e != NULL){ 
+	while (e != NULL){
 		if (!g->vertices[e->vertex].visited)
 			dfs(e->vertex, g);
 
@@ -310,6 +311,118 @@ void improvedNpPathsAlg(int firstVertex, Graph *g){
 
 
 
+/**
+ * From an initial vertex (firstVertex), it gets the shortest path to the rest
+ *  of vertices of the weighted graph. Because the graph is a weighted graph, 
+ *  not only matters the number of edges (distance) needed to reach a specific 
+ *  vertex, it also matters the weight os the edges and are added to the distance.
+ * 
+ * Loop for each vertex to asign each one a distance from firstVertex --> O(n)
+ * Loop for each vertex searching next vertex with min distance (searchMinDistNoVisVertex) --> O(n)
+ * Update distance of next vertices (edges) with the weight --> O(a) (constant)
+ *
+ * Inner loop and updates are executed n times --> algorith complexity is --> O(n²+a)
+ * 
+ * For dense, big graphs, a~n² and the algorithm is easy and "optimum"
+ * For small graphs, a<<n² and the algorith is too slow.
+ */
+void dijkstra(int firstVertex, Graph *g){
+	int v,i;
+	GraphEdge *e;
+	
+	initGraph(g);
+	g->vertices[firstVertex].distance = 0;
+	g->vertices[firstVertex].previous = 0;
+	
+	for(i=1; i<=g->order; i++){
+		v = searchMinDistNoVisVertex(g);
+		if(v == -1) return;
+	
+		g->vertices[v].visited = 1;
+		e = g->vertices[v].edges;
+		while(e != NULL){
+				
+			if(!g->vertices[e->vertex].visited){
+				if(g->vertices[v].distance + e->weight < g->vertices[e->vertex].distance){
+					g->vertices[e->vertex].distance = g->vertices[v].distance + e->weight;
+					g->vertices[e->vertex].previous = v;
+				}
+			}
+			e = e->next;
+		}
+	}
+}
+
+
+/**
+ * Searches for the vertex with minimun distance.
+ *  Returns -1 if all vertices are visited or there
+ *  is not a reachable vertex with min distance.
+ */
+static int searchMinDistNoVisVertex(Graph *g){
+	int i,j;
+	int v, minDist;
+	
+	for(i=1, v=-1, minDist=INF; i<=g->order; i++){
+		if(!g->vertices[i].visited && g->vertices[i].distance < minDist){
+			v = i;
+			minDist = g->vertices[i].distance;
+		}
+	}
+	return v;
+}
+
+
+
+/**
+ * The algorithm does the same as dijkstra algorithm, but now it will use a heap
+ *  to improve time complexity.
+ *
+ * Now the algorithm consists of removing the minimun (top) element of the heap
+ *  until it finds a not visited one. This removing function (removeTop) takes
+ *  times of order O(log(t)) (with t=heap size), and for each one it updates the
+ *  distances of his adyacent vertices (with the weight of the edge) (a edges --> O(a))).
+ *
+ * Now, algorithm time complexity is --> O(a*log(n))
+ */
+void improvedDijkstra(int firstVertex, Graph *g){
+	int i, v;
+	GraphEdge *e;
+	Heap h;
+	
+	heapElement x,y;
+	x.key = 0;
+	x.info = firstVertex;
+
+	initGraph(g);
+	g->vertices[firstVertex].distance = 0;
+	g->vertices[firstVertex].previous = 0;
+	
+	initHeap(&h);
+	add(x, &h);
+	while(!isHeapEmpty(&h)){
+		removeTop(&h, &x);
+		if(!g->vertices[x.info].visited){
+			g->vertices[x.info].visited = 1;
+			e = g->vertices[x.info].edges;
+			while(e != NULL){
+				v = e->vertex;
+				if(!g->vertices[v].visited){
+					if(g->vertices[x.info].distance + e->weight < g->vertices[v].distance){
+						g->vertices[v].distance = g->vertices[x.info].distance + e->weight;
+						g->vertices[v].previous = x.info;
+						y.key = g->vertices[v].distance;
+						y.info = v;
+						add(y, &h);
+					}
+				}
+				e = e->next;
+			}
+		}
+	}
+}
+
+
 
 /**
  * Algorithm to interpret the graph table and print the path from firstVertex
@@ -367,8 +480,8 @@ void printGraph(Graph *g){
 	int i;
 	GraphEdge *e;
 
-	printf("       %s \n", COLOR_TEXT(vis entD topS dist weight prev edges));
-	printf("     %s \n", COLOR_TEXT(+----+----+----+----+------+----+----->));
+	printf("       %s \n", COLOR_TEXT(vis entD topS dist weight prev edges(vertex,weight)));
+	printf("     %s \n", COLOR_TEXT(+----+----+----+----+------+----+------------------->));
 
 	for(i=1;i<=g->order;i++){  
 		printf("  %2d %s %2d %s %2d %s %2d %s", 
@@ -394,13 +507,13 @@ void printGraph(Graph *g){
 			#ifndef WEIGHTED_GRAPHS
   				printf(" ->%2d", e->vertex);	// Not weighted graph
 			#else
-				printf(" ->%2d, %2d", e->vertex, e->weight); // Weighted graph
+				printf(" ->%2d,%2d", e->vertex, e->weight); // Weighted graph
 			#endif 
 			e = e->next;
 		}
 		printf("\n");
 	}
 
-	printf("     %s", COLOR_TEXT(+----+----+----+----+------+----+----->));
+	printf("     %s", COLOR_TEXT(+----+----+----+----+------+----+------------------->));
 	printf("\n\x1b[36;1m\tGraph order = %d\x1b[0m\n",g->order);
 }

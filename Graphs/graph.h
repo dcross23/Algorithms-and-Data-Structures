@@ -5,7 +5,7 @@
 #define MAX_VERTEX 20 
 #define INF 999999
 
-//#define WEIGHTED_GRAPHS 1  //Comment this for no weighted graphs
+#define WEIGHTED_GRAPHS 1  //Comment this for no weighted graphs
 
 
 /**
@@ -43,7 +43,7 @@ typedef struct graph{
 
 
 void printGraph(Graph *g);
-void freeGraphLists(Graph *g);
+//void freeGraphLists(Graph *g);
 
 
 void initGraph(Graph *g);
@@ -60,11 +60,15 @@ void fullBfs(int firstVertex, Graph *g);
 int topologicalSort(Graph *g);
 int improvedTopSort(Graph *g);
 
+
 //Shortest Path Algorthims
 void npPathsAlgorithm(int firstVertex, Graph *g);   //Not weighted graphs 
 void improvedNpPathsAlg(int firstVertex, Graph *g); //Not weighted graphs
-//void dijkstra(int firstVertex, Graph *g);	    //Weighted graphs
-//void improvedDijkstra(int firstVertex, Graph *g); //Weighted graphs
+
+void dijkstra(int firstVertex, Graph *g);	    //Weighted graphs
+static int searchMinDistNoVisVertex(Graph *g);
+void improvedDijkstra(int firstVertex, Graph *g);   //Weighted graphs
+
 int seeCostAndPath(int firstVertex, int lastVertex, Graph *g);
 void seeAllCostsAndPaths(int firstVertex, Graph *g);
 
