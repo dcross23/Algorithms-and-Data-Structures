@@ -20,10 +20,6 @@ main.o: main.c
 sortingAlgorithms.o: sortingAlgorithms.c sortingAlgorithms.h
 	$(CC) $(CFLAGS) sortingAlgorithms.c
 
-arraysListsUtilities.o: arraysListsUtilities.c arraysListsUtilities.h
-	$(CC) $(CFLAGS) arraysListsUtilities.c
-
-
 clean: 
 	cd $(OF); make clean
 	rm *.o
