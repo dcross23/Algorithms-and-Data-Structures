@@ -1,29 +1,52 @@
-CC=gcc
-#CFLAGS=-c
-CFLAGS=-c -g
 EXECUTABLE_NAME=graphs
 
-OF = OtherFiles
-OBJ = graph.o $(OF)/linkedListQueue.o $(OF)/linkedListStack.o $(OF)/heap.o $(OF)/graphCreator.o main.o
+#CFLAGS
+CC=gcc
+CFLAGS=-c -g
 
-.PHONY: all
+#OTHERFILES
+OF = OtherFiles
+OF_SRC = $(wildcard $(OF)/*.c)
+OF_OBJS = $(patsubst $(OF)/%.c,$(OF)/%.o,$(OF_SRC))
+
+#THIS FOLDER
+OBJ = graph.o $(OF_OBJS) main.o
+
+#DEPENDENCIES
+DEPS_FLAG = -MMD -MF $(@:.o=.d)
+DEP = $(patsubst %.o,%.d,$(OBJ))
+-include $(DEP)
+
+
+.PHONY: all otherFiles run debug clean
+
+
 all: otherFiles $(EXECUTABLE_NAME)
 
-.PHONY: otherFiles
 otherFiles:
-	cd $(OF); make
+	cd $(OF); make all
 
 $(EXECUTABLE_NAME): $(OBJ)
 	$(CC) $^ -o $@ -lm
 
-main.o: main.c graph.h $(OF)/graphCreator.o
-	$(CC) $(CFLAGS) main.c
+main.o: otherFiles main.c
+	$(CC) $(CFLAGS) main.c $(DEPS_FLAG)
+	
+graph.o: otherFiles graph.c
+	$(CC) $(CFLAGS) graph.c $(DEPS_FLAG)
 
-graph.o: graph.c graph.h $(OF)/linkedListQueue.h $(OF)/linkedListStack.h $(OF)/heap.h
-	$(CC) $(CFLAGS) graph.c
 
-.PHONY: clean
+run: 
+	make
+	./$(EXECUTABLE_NAME)
+
+debug:
+	make
+	gdb ./$(EXECUTABLE_NAME)
+
+
 clean: 
 	cd $(OF); make clean
-	rm *.o
+	rm *.o 
+	rm *.d 
 	rm $(EXECUTABLE_NAME)

@@ -1,22 +1,24 @@
+#CFLAGS
 CC=gcc
-#CFLAGS=-c
 CFLAGS=-c -g 
 
-.PHONY: all
-all: linkedListQueue.o linkedListStack.o heap.o graphCreator.o
+#SOURCE AND OBJECT FILES
+SRC = $(wildcard *.c)
+OBJS = $(patsubst %.c,%.o,$(SRC))
 
-linkedListQueue.o: linkedListQueue.c linkedListQueue.h
-	$(CC) $(CFLAGS) linkedListQueue.c
+#DEPENDENCIES
+DEPS_FLAGS = -MMD -MF $(@:.o=.d)
+DEPS = $(patsubst %.o,%.d,$(OBJS))
+-include $(DEPS)
+
+
+.PHONY: all clean
+
+all: $(OBJS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) $< $(DEPS_FLAGS)
 	
-linkedListStack.o: linkedListStack.c linkedListStack.h
-	$(CC) $(CFLAGS) linkedListStack.c
-	
-heap.o: heap.c heap.h
-	$(CC) $(CFLAGS) heap.c	
-	
-graphCreator.o: graphCreator.c graphCreator.h
-	$(CC) $(CFLAGS) graphCreator.c	
-	
-.PHONY: clean	
 clean: 
 	rm *.o
+	rm *.d

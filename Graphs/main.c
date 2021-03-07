@@ -11,6 +11,12 @@ int main(void){
 
 	initGraph(g);
 	printGraph(g);	
+	
+	//Is connected?
+	if(isConnectedGraph(g))
+		printf("\n\x1b[33;3;4mGraph is connected\x1b[0m\n");
+	else
+		printf("\n\x1b[33;3;4mGraph is not connected\x1b[0m\n");
 
 	//Depth First Search ("Recorrido en profundidad")	
   	printf("\nDFS (\"Profundidad\"): \x1b[35;1m");
@@ -135,6 +141,12 @@ int main(void){
   	//spanningTree = improvedPrim(g);
   	//printf("\n\x1b[33;3;4mSpanning tree graph generated after improvedPrim:\x1b[0m\n");
   	//printGraph(spanningTree);
+  	
+  	
+  	g = createExampleGraph2();
+  	spanningTree = kruskal(g);
+  	printf("\n\x1b[33;3;4mSpanning tree graph generated after kruskal:\x1b[0m\n");
+  	printGraph(spanningTree);
   	
 	return 0;
 }

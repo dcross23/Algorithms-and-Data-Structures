@@ -52,7 +52,4 @@ int heapify(Heap *h);
 void descFiltering(Heap *h, int posToFilter);
 void ascFiltering(Heap *h, int posToFilter);
 
-
-//void heapsort(Monticulo *m);
-
 #endif

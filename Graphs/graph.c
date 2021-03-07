@@ -1,14 +1,19 @@
 #include "graph.h"
-
-#include <stdio.h>
-#include <stdlib.h>
 #include "./OtherFiles/linkedListQueue.h"
 #include "./OtherFiles/linkedListStack.h"
 #include "./OtherFiles/heap.h"
+#include "./OtherFiles/TreeDisjointSet.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
 
 #define COLOR_TEXT(text) "\x1b[36;1m"#text"\x1b[0m"
 
 
+/*=================================================================================================*/
+/*    				    INIT GRAPH AND SEARCH FUNCTIONS                                */
+/*=================================================================================================*/
 /**
  * Initiates the graph with default values.
  */
@@ -231,7 +236,9 @@ int improvedTopSort(Graph *g){
 }
 
 
-
+/*=================================================================================================*/
+/*    					SORTEST PATH ALGORITHMS	                                   */
+/*=================================================================================================*/
 
 /**
  * From an initial vertex (firstVertex), it gets the shortest path to the rest
@@ -471,12 +478,15 @@ void seeAllCostsAndPaths(int firstVertex, Graph *g){
 
 
 
-
+/*=================================================================================================*/
+/*    					PRIM SPANNING TREE					   */
+/*=================================================================================================*/
 /**
  * Valid for no directed graphs.
- * From a random vertex (in our case vertex 1), and from this vertex gets
- *  in each iteration the next vertex considering the shortest (less weight)
- *  edge.
+ * From a random vertex (in our case vertex 1) it gets in each
+ *  iteration the next vertex considering the shortest (less weight)
+ *  edge. It modifies "g" and returns a new graph interpreting
+ *  this modifications.
  *
  * Time complexity analisis very similar to dijkstra --> O(n²)
  */
@@ -630,6 +640,178 @@ Graph* improvedPrim(Graph *g){
 
 
 
+
+
+/*=================================================================================================*/
+/*    					  KRUSKAL 		                                   */
+/*=================================================================================================*/
+/**
+ * This algorithm first creates a forest of trees (a disjoint set of trees) where each 
+ *  graph vertex is a different tree. From the total amount of edges, while these trees
+ *  are not connected, it gets the edge with less width. 
+ *  If the edge connects 2 different vertices from different trees, it connects these 
+ *   2 trees to expand the forest and the edge is accepted. 
+ *  If the edge connects 2 vertices from the same tree, the edge is not accepted.
+ * This is repeated until there are no more possible edges, but it really finishes
+ *  when all trees are connected.
+ *
+ * Trees are created using disjoint sets and the forest is the hole partition. 
+ * To know what is the next edge with less weight, is uses a modified heap that stores
+ *  in the key the weight of the edge, and in the info the 2 vertices of the edge.
+ */
+Graph* kruskal(Graph *g){
+	int acceptedEdges;
+	
+	TDsPartition p;
+	TDsSet setU, setV;
+	create(p);
+
+	HeapK hk;
+	HeapElementK x;
+	
+	createEdgesHeap(g, &hk);
+	
+	Graph *sp = calloc(1, sizeof(Graph));
+	sp->order = g->order;
+	initGraph(sp);
+	
+	acceptedEdges = 0;
+	while(acceptedEdges < g->order-1){
+		removeTopK(&hk, &x);
+		setU = search(x.info.u, p);
+		setV = search(x.info.v, p);
+		if(setU != setV){
+			join(setU, setV, p);
+			acceptedEdges++;
+			acceptEdge(x, sp);
+		}
+	}
+	return sp;
+}
+
+
+/**
+ * Creates the heap with all possible edges.
+ */
+static void createEdgesHeap(Graph *g, HeapK *hk){
+	int i,j, repeated;
+	GraphEdge *e;
+	
+	initHeapK(hk);
+	for(i=1; i<=g->order; i++){
+		e = g->vertices[i].edges;
+		while(e != NULL){
+			//Look up if the edge is already added
+			repeated = 0;
+			for(j=1; j<=hk->size; j++){
+				if((i==hk->elements[j].info.u && e->vertex==hk->elements[j].info.v) ||
+				   (i==hk->elements[j].info.v && e->vertex==hk->elements[j].info.u)){
+				   
+				 	repeated = 1;
+				 	break;  
+				 }
+			}
+			
+			//If it is not added, adds it
+			if(!repeated){
+				hk->size++;
+				hk->elements[hk->size].key = e->weight;
+				hk->elements[hk->size].info.u = i;
+				hk->elements[hk->size].info.v = e->vertex;
+			}
+			
+			e = e->next;
+		}
+	}
+	heapifyK(hk);	
+}
+
+/**
+ * Accepts an edge and adds it to the new graph (spanning tree graph).
+ * When a edge with vertices u,v and weight w is accepted, it adds vertex 
+ *  u to the list of edges of vertex v with weight w creating a new GraphEdge, 
+ *  and repets the same but adding v to the list of edges of u. 
+ */
+static void acceptEdge(HeapElementK x, Graph *g){
+	GraphEdge *e, *n;
+	
+	//Insert vertex v in the list of u
+	n = calloc(1, sizeof(GraphEdge));
+	n->vertex = x.info.v;
+	n->weight = x.key;
+	n->next = NULL;
+	
+	if(g->vertices[x.info.u].edges == NULL){
+		g->vertices[x.info.u].edges = n;
+	}else{
+		e = g->vertices[x.info.u].edges;
+		while(e->next != NULL) 
+			e = e->next;
+		e->next = n;
+	}
+	g->vertices[x.info.u].entryDegree++;
+	
+	//Insert vertex u in the list of v
+	n = calloc(1, sizeof(GraphEdge));
+	n->vertex = x.info.u;
+	n->weight = x.key;
+	n->next = NULL;
+	
+	if(g->vertices[x.info.v].edges == NULL){
+		g->vertices[x.info.v].edges = n;
+	}else{
+		e = g->vertices[x.info.v].edges;
+		while(e->next != NULL) e = e->next;
+		e->next = n;
+	}
+	g->vertices[x.info.v].entryDegree++;
+}
+
+
+
+/*=================================================================================================*/
+/*    					  OTHER FUNCTIONS	                                   */
+/*=================================================================================================*/
+/**
+ * Determines if a graph is fully connected or not. 
+ * Returns 1 if connected, 0 if not, and -1 if error.
+ */
+int isConnectedGraph(Graph *g){
+	if(g == NULL) return -1;
+	
+	int i, s1, s2, rep;
+	GraphEdge *e;
+	
+	TDsPartition p;
+	create(p);
+	
+	//Create a partition that contains a tree for each conected subgraph 
+	// of the graph. This is, if the graph is full connected, there is going
+	// to be just 1 tree, is not, there are going to be n trees(1 for each
+	// subgraph)
+	for(i=1; i<=g->order; i++){
+		e = g->vertices[i].edges;
+		while(e != NULL){
+			s1 = search(i, p); 
+			s2 = search(e->vertex, p);
+			if(s1 != s2)
+				join(s1, s2, p);
+			
+			e = e->next;
+		}
+	}
+	
+	//If there is only one representant(only one tree), graph is fully connected,
+	// if there is more than one, is not fully connected
+	rep = -1;
+	for(i=1; i<=g->order; i++){
+		if(p[i] < 0){
+			if(rep < 0) rep = i;
+			else return 0;
+		}
+	}
+	return 1;
+}
 
 
 
