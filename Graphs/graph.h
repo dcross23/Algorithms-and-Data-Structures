@@ -56,7 +56,7 @@ void fullDfs(int firstVertex, Graph *g);
 void bfs(int firstVertex, Graph *g);
 void fullBfs(int firstVertex, Graph *g);
 
-//Topological Sort  (only directed acyclic and not ponderated graphs)
+//Topological Sort  (only directed acyclic and not weighted graphs)
 int topologicalSort(Graph *g);
 int improvedTopSort(Graph *g);
 
@@ -66,10 +66,30 @@ void npPathsAlgorithm(int firstVertex, Graph *g);   //Not weighted graphs
 void improvedNpPathsAlg(int firstVertex, Graph *g); //Not weighted graphs
 
 void dijkstra(int firstVertex, Graph *g);	    //Weighted graphs
-static int searchMinDistNoVisVertex(Graph *g);
+static int searchMinDistNoVisVertex(Graph *g);	//Needed for dijkstra
 void improvedDijkstra(int firstVertex, Graph *g);   //Weighted graphs
 
 int seeCostAndPath(int firstVertex, int lastVertex, Graph *g);
 void seeAllCostsAndPaths(int firstVertex, Graph *g);
 
+
+//Spanning tree algorithms
+Graph* prim(Graph *g); 
+static int searchMinWeightNoVisVertex(Graph *g);  //Needed for prim
+static Graph* createNewGraph(Graph *g);           //Needed for prim
+static int insertInList(int v1, int v2, int weight, Graph *new);  //Needed for prim
+Graph* improvedPrim(Graph *g);
+
 #endif
+
+
+
+
+
+
+
+
+
+
+
+

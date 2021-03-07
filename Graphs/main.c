@@ -1,50 +1,48 @@
 #include "graph.h"
+#include "OtherFiles/graphCreator.h"
 
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 
-Graph *createExampleGraph();
-
-
 int main(void){ 
-	Graph* gT28 = createExampleGraph();
+	Graph* g = createExampleGraph1();
 
-	initGraph(gT28);
-	printGraph(gT28);	
+	initGraph(g);
+	printGraph(g);	
 
 	//Depth First Search ("Recorrido en profundidad")	
   	printf("\nDFS (\"Profundidad\"): \x1b[35;1m");
-  	dfs(1,gT28);
+  	dfs(1,g);
   	printf("\x1b[0m");
 
-	initGraph(gT28);
+	initGraph(g);
 	printf("\nDFS with other start: \x1b[35;1m");
-  	dfs(7,gT28);
+  	dfs(7,g);
   	printf("\x1b[0m");
 
 
-	initGraph(gT28);
+	initGraph(g);
   	printf("\nFULL DFS (\"Profunidad mejorado\"): \x1b[35;1m");
-  	fullDfs(7,gT28);
+  	fullDfs(7,g);
   	printf("\x1b[0m\n");
 
 
 	//Breadth First Search ("Recorrido en amplitud")	
-	initGraph(gT28);
+	initGraph(g);
  	printf("\nBFS (\"Amplitud\"): \x1b[35;1m");
-  	bfs(1,gT28);
+  	bfs(1,g);
   	printf("\x1b[0m");
   	
-  	initGraph(gT28);
+  	initGraph(g);
  	printf("\nBFS with other start: \x1b[35;1m");
-  	bfs(5,gT28);
+  	bfs(5,g);
   	printf("\x1b[0m");
   	
-  	initGraph(gT28);
+  	initGraph(g);
  	printf("\nFULL BFS (\"Amplitud mejorado\"): \x1b[35;1m");
-  	fullBfs(5,gT28);
+  	fullBfs(5,g);
   	printf("\x1b[0m\n");
   	
   	printf("\n\x1b[32;1m========================================================================\x1b[0m\n");
@@ -52,36 +50,36 @@ int main(void){
   	
   	//Topological sort
   	printf("\nTopological Sort:\x1b[35;1m");
-  	if(-1 == topologicalSort(gT28)){
+  	if(-1 == topologicalSort(g)){
   		printf("\n Cyclic graph, imposible to get topological sort\n");
   	}else{
   		int i, tSort;
-		for(tSort=1; tSort<=gT28->order; tSort++){
-	  		for(i=1; i<=gT28->order; i++){
-	  			if(gT28->vertices[i].topSort == tSort)
+		for(tSort=1; tSort<=g->order; tSort++){
+	  		for(i=1; i<=g->order; i++){
+	  			if(g->vertices[i].topSort == tSort)
 	  				printf(" %d", i);
 	  		}
 	  	}  	
   	
   		printf("\n\x1b[33;3;4mGraph after topologicalSort algorithm:\x1b[0m\n");
-  		printGraph(gT28);
+  		printGraph(g);
   	}
   	
   	
   	printf("\n\nImproved topological Sort:\x1b[35;1m");
-  	if(-1 == improvedTopSort(gT28)){
+  	if(-1 == improvedTopSort(g)){
   		printf("\n Cyclic graph, imposible to get topological sort\n");
   	}else{
   		int i, tSort;
-		for(tSort=1; tSort<=gT28->order; tSort++){
-	  		for(i=1; i<=gT28->order; i++){
-	  			if(gT28->vertices[i].topSort == tSort)
+		for(tSort=1; tSort<=g->order; tSort++){
+	  		for(i=1; i<=g->order; i++){
+	  			if(g->vertices[i].topSort == tSort)
 	  				printf(" %d", i);
 	  		}
 	  	}  	
   	
   		printf("\n\x1b[33;3;4mGraph after improvedTopSort algorithm:\x1b[0m\n");
-  		printGraph(gT28);
+  		printGraph(g);
   	}
   	
   	printf("\n\x1b[35;1;4m(Results are different but they are both correct)\x1b[0m\n");
@@ -95,186 +93,51 @@ int main(void){
   	//No weighted graphs
   		printf(" ");
   		printf("\n\x1b[33;3;4mGraph after npPathsAlgorithm algorithm:\x1b[0m\n");
-  		npPathsAlgorithm(firstV,gT28);
-  		printGraph(gT28);
+  		npPathsAlgorithm(firstV,g);
+  		printGraph(g);
   		
   		//printf("\n\x1b[33;3;4mGraph after improvedNpPathsAlg algorithm:\x1b[0m\n");
-  		//improvedNpPathsAlg(firstV, gT28);
-  		//printGraph(gT28);
+  		//improvedNpPathsAlg(firstV, g);
+  		//printGraph(g);
   		
 		printf("\n\x1b[33;3;4mAll paths generated\x1b[0m\n");
-		seeAllCostsAndPaths(firstV, gT28);  
+		seeAllCostsAndPaths(firstV, g);  
 		
   	#else
   	//Weighted graphs
   		printf(" ");
   		printf("\n\x1b[33;3;4mGraph after Dijkstra algorithm:\x1b[0m\n");
-  		dijkstra(firstV,gT28);
-  		printGraph(gT28);
+  		dijkstra(firstV,g);
+  		printGraph(g);
   		
   		//printf("\n\x1b[33;3;4mGraph after improvedDijkstra algorithm:\x1b[0m\n");
-  		//improvedDijkstra(firstV, gT28);
-  		//printGraph(gT28);
+  		//improvedDijkstra(firstV, g);
+  		//printGraph(g);
   		
   		printf("\n\x1b[33;3;4mAll paths generated\x1b[0m\n");
-		seeAllCostsAndPaths(firstV, gT28);  
+		seeAllCostsAndPaths(firstV, g);  
   	#endif 	
   	
+  	
+  	printf("\n\n\x1b[32;1m========================================================================\x1b[0m\n");
+  	
+  	//Spanning trees
+  	Graph *spanningTree;
+  	
+  	g = createExampleGraph2();
+  	printf("\n\x1b[33;3;4mOriginal graph:\x1b[0m\n");
+  	printGraph(g);
+  	
+  	spanningTree = prim(g);
+  	printf("\n\x1b[33;3;4mSpanning tree graph generated after prim:\x1b[0m\n");
+  	printGraph(spanningTree);
+  	
+  	//spanningTree = improvedPrim(g);
+  	//printf("\n\x1b[33;3;4mSpanning tree graph generated after improvedPrim:\x1b[0m\n");
+  	//printGraph(spanningTree);
   	
 	return 0;
 }
 
 
-/**
- *Creates an example graph (weights are not included in this drawing)
- *
- *         1 -> 2
- *	 /  \  / \
- *	v   v v   v
- *	3 <- 4 <- 5
- *	 \  / \  /
- *        vv   vv
- *        6 <- 7
- * 
- */
-Graph *createExampleGraph(){ 
-	int i;
-	GraphEdge *e;
-	Graph *g;
-
-	g=(Graph *)calloc(1,sizeof(Graph)); 
-
-	g->order=7; // 7 vertices
-
-	// edges vertex 1
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 2;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 2;
-	#endif
-	g->vertices[1].edges=e;
-
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 3;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 4;
-	#endif
-	g->vertices[1].edges->next=e;
-
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 4;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 1;
-	#endif
-	g->vertices[1].edges->next->next=e;
-	e->next=NULL;
-
-
-	// edges vertex 2
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 4;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 3;
-	#endif
-	g->vertices[2].edges=e;
-
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 5;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 10;
-	#endif
-	g->vertices[2].edges->next=e;
-	e->next=NULL;
-
-
-	// edges vertex 3
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 6;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 5;
-	#endif
-	g->vertices[3].edges=e;
-	e->next=NULL;
-
-
-	// edges vertex 4
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 3;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 2;
-	#endif
-	g->vertices[4].edges=e;
-
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 6;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 8;
-	#endif
-	g->vertices[4].edges->next=e;
-
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 7;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 4;
-	#endif
-	g->vertices[4].edges->next->next=e;
-	e->next=NULL;
-
-
-	// edges vertex 5
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 4;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 2;
-	#endif
-	g->vertices[5].edges=e;
-
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 7;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 6;
-	#endif
-	g->vertices[5].edges->next=e;
-	e->next=NULL;
-
-
-	// edges vertex 6
-	g->vertices[6].edges=NULL;
-
-
-	// edges vertex 7
-	e = (GraphEdge *)calloc(1,sizeof(GraphEdge));
-	e->vertex = 6;
-	#ifndef WEIGHTED_GRAPHS
-		e->weight = 1;
-	#else
-		e->weight = 1;
-	#endif
-	g->vertices[7].edges=e;
-	e->next=NULL;
-
-	return g;
-}
 

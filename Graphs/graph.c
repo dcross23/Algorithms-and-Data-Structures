@@ -1,6 +1,7 @@
 #include "graph.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "./OtherFiles/linkedListQueue.h"
 #include "./OtherFiles/linkedListStack.h"
 #include "./OtherFiles/heap.h"
@@ -336,7 +337,6 @@ void dijkstra(int firstVertex, Graph *g){
 	
 	for(i=1; i<=g->order; i++){
 		v = searchMinDistNoVisVertex(g);
-		if(v == -1) return;
 	
 		g->vertices[v].visited = 1;
 		e = g->vertices[v].edges;
@@ -356,14 +356,14 @@ void dijkstra(int firstVertex, Graph *g){
 
 /**
  * Searches for the vertex with minimun distance.
- *  Returns -1 if all vertices are visited or there
- *  is not a reachable vertex with min distance.
+ * If there is any valid vertex, returns 1 (1 is already
+ *  visited, so it will finish)
  */
 static int searchMinDistNoVisVertex(Graph *g){
 	int i,j;
 	int v, minDist;
 	
-	for(i=1, v=-1, minDist=INF; i<=g->order; i++){
+	for(i=1, v=1, minDist=INF; i<=g->order; i++){
 		if(!g->vertices[i].visited && g->vertices[i].distance < minDist){
 			v = i;
 			minDist = g->vertices[i].distance;
@@ -371,8 +371,6 @@ static int searchMinDistNoVisVertex(Graph *g){
 	}
 	return v;
 }
-
-
 
 /**
  * The algorithm does the same as dijkstra algorithm, but now it will use a heap
@@ -470,6 +468,168 @@ void seeAllCostsAndPaths(int firstVertex, Graph *g){
 		}
 	}
 }
+
+
+
+
+/**
+ * Valid for no directed graphs.
+ * From a random vertex (in our case vertex 1), and from this vertex gets
+ *  in each iteration the next vertex considering the shortest (less weight)
+ *  edge.
+ *
+ * Time complexity analisis very similar to dijkstra --> O(n²)
+ */
+Graph* prim(Graph *g){
+	int i,v;
+	GraphEdge *e;
+	
+	initGraph(g);
+	g->vertices[1].weight = 0;
+	g->vertices[1].previous = 0;
+	for(i=1; i<=g->order; i++){
+		v = searchMinWeightNoVisVertex(g);
+		g->vertices[v].visited = 1;
+		e = g->vertices[v].edges;
+		while(e != NULL){
+			if(!g->vertices[e->vertex].visited){
+				if(g->vertices[e->vertex].weight > e->weight){
+					g->vertices[e->vertex].weight = e->weight;
+					g->vertices[e->vertex].previous = v; 
+				}
+			}
+			e = e->next;
+		}
+	}
+	
+	return createNewGraph(g);
+}
+
+
+/**
+ * Searches for the vertex with minimun weight to reach it.
+ * If there is any valid vertex, returns 1 (1 is already
+ *  visited, so it will finish)
+ */
+static int searchMinWeightNoVisVertex(Graph *g){
+	int i,j;
+ 	int v=1, wMin = INF;
+ 	for(i=1; i<=g->order; i++){
+ 		if(!g->vertices[i].visited && g->vertices[i].weight < wMin){
+ 			v = i;
+ 		}
+ 	}
+ 	return v;
+}
+
+/**
+ * Returns a new graph creating edges and all necesary stuff from
+ *  a given graph (g). 
+ */
+static Graph* createNewGraph(Graph *g){
+	Graph *new;
+	int i,prev;
+	
+	if(g==NULL || NULL==(new = malloc(sizeof(Graph)))) 
+		return NULL;
+	
+	
+	new->order = g->order;
+	for(i=1; i<=g->order; i++){
+		prev = g->vertices[i].previous;
+		if(prev != 0){
+			if(insertInList(i,prev,g->vertices[i].weight, new)) return NULL;
+			if(insertInList(prev,i,g->vertices[i].weight, new)) return NULL;
+		}
+	}
+	
+	initGraph(new);
+	for(i=1; i<=new->order; i++){
+		new->vertices[i].visited = g->vertices[i].visited;
+		new->vertices[i].weight = g->vertices[i].weight;
+		new->vertices[i].previous = g->vertices[i].previous;
+	}
+	return new;
+}
+
+/**
+ * Adds edge compose of v2 and weight, to the list of edged of v1, 
+ *  in the graph "new".
+ */
+static int insertInList(int v1, int v2, int weight, Graph *new){
+	GraphEdge *e, *n;
+	
+	if(NULL == (n = malloc(sizeof(GraphEdge)))){
+		return -1;
+	}else{
+		n->vertex = v2;
+		n->weight = weight;
+		n->next = NULL;
+	}
+	
+	e = new->vertices[v1].edges;
+	if(e == NULL){
+		new->vertices[v1].edges = n;
+	}else{
+		while(e->next != NULL)
+			e = e->next;
+		e->next = n;
+	}
+	return 0;
+}
+
+
+
+
+/**
+ * The algorithm does the same as prim algorithm, but now it will use a heap
+ *  to improve time complexity.
+ *
+ * Time complexity analisis very similar to improvedDijkstra --> O(a*log(n))
+ */
+Graph* improvedPrim(Graph *g){
+	int i,v;
+	GraphEdge *e;
+	Heap h;
+
+	heapElement x, y;
+	x.key = 0;
+	x.info = 1;
+	
+	initGraph(g);
+	g->vertices[1].weight = 0;
+	g->vertices[1].previous = 0;
+	
+	initHeap(&h);
+	add(x, &h);
+	
+	while(!isHeapEmpty(&h)){
+		removeTop(&h, &x);
+		if(!g->vertices[x.info].visited){
+			g->vertices[x.info].visited = 1;
+			e = g->vertices[x.info].edges;
+			while(e != NULL){
+				v = e->vertex;
+				if(!g->vertices[v].visited){
+					if(g->vertices[v].weight > e->weight){
+						g->vertices[v].weight = e->weight;
+						g->vertices[v].previous = x.info;
+						
+						y.key = g->vertices[v].weight;
+						y.info = v;
+						add(y, &h);
+					}
+				}
+				e = e->next;
+			}
+		}
+	}
+	
+	return createNewGraph(g);
+}
+
+
+
 
 
 
